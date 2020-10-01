@@ -1,7 +1,8 @@
 * {
     font-family: 'Roboto', sans-serif;
-    ;
+
 }
+
 
 .eventPop__container {
     width: 100vw;
@@ -9,7 +10,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 99;
+    z-index: 9;
     display: none;
 }
 
@@ -18,19 +19,41 @@
         0 9px 46px 8px rgba(0, 0, 0, 0.12),
         0 11px 15px -7px rgba(0, 0, 0, 0.2);
     position: absolute;
-    width: 420px;
+    width: 446px;
     height: 80%;
     overflow-y: auto;
     background-color: #ffffff;
     z-index: 99;
     display: block;
-    top: 90px;
+    top: 9px;
     left: 80px;
-    padding: 15px;
+
 
     font-size: 75%;
 }
 
-.datetimepicker-header.is-date-only {
-    display: none;
+.popup_wrapper{
+    position: relative;
+    padding:30px 15px 15px 15px;
+    /*margin-top: 15px;*/
+}
+#dragger{
+    cursor: move;
+    background: #e3e2e2;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 20px;
+}
+.icon.left{
+    font-size: 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+.column.is-one-fifth{
+    width: 10%;
 }
