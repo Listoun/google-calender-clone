@@ -21,12 +21,13 @@
     position: absolute;
     width: 446px;
     height: 80%;
-    overflow-y: auto;
+
     background-color: #ffffff;
     z-index: 99;
     display: block;
     top: 9px;
     left: 80px;
+    max-height: 620px;
 
 
     font-size: 75%;
@@ -34,8 +35,9 @@
 
 .popup_wrapper{
     position: relative;
-    padding:30px 15px 15px 15px;
-    /*margin-top: 15px;*/
+    padding:33px 15px 15px 15px;
+height:100%;
+    overflow-y: auto;
 }
 #dragger{
     cursor: move;
@@ -45,6 +47,7 @@
     left: 0;
     right: 0;
     height: 20px;
+    z-index: 99;
 }
 .icon.left{
     font-size: 22px;
@@ -56,4 +59,7 @@
 }
 .column.is-one-fifth{
     width: 10%;
+}
+.select,.select select{
+    width: 100%;
 }
