@@ -63,3 +63,23 @@ height:100%;
 .select,.select select{
     width: 100%;
 }
+.event__contextMenu{
+    position: absolute;
+    z-index: 9;
+    top: 50px;
+    left:50px;
+    width:150px;
+    height: 150px;
+    display: none;
+}
+.event__contextMenu .contextMenu__eventAction{
+    margin-top: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.event__contextMenu button{
+    border: none;
+    color:#fff;
+    border-radius: 5px;
+}

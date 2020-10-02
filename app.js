@@ -12,7 +12,8 @@ const TYPES=[
 var mouseX, mouseY, windowWidth, windowHeight;
 var popupLeft, popupTop,popUp;
 var popUpContainer,btnCancelEvent,btnSubmitEvent,calendarEl;
-var startHourLabel,endHourLabel,startMinLabel,endMinLabel;
+var startHourLabel,endHourLabel,startMinLabel,endMinLabel
+var contextMenu=document.querySelector('.event__contextMenu');
 const convertDateString=(date)=>{
     let startDateParts = date.split("/");
      return `${startDateParts[2]}-${startDateParts[1]}-${startDateParts[0]}`
@@ -234,16 +235,25 @@ const showPopup = (event) => {
 }
 
 var calendar = new FullCalendar.Calendar(calendarEl, {
-    timeZone: 'local',
+
     locale:'fr',
     initialView: 'dayGridMonth',
+    editable: true,
     headerToolbar: {
         left: 'prev,next today',
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay'
     },
     selectable: true,
+    eventChange:function(changeInfo){
+      console.log(changeInfo.event._instance.range.start.toISOString());
+      console.log(changeInfo.event._instance.range.end.toISOString());
+    },
     eventClick: function (info) {
+        contextMenu.style.display='block';
+        contextMenu.style.top=`${info.jsEvent.clientY}px`;
+        contextMenu.style.left=`${info.jsEvent.clientX}px`;
+        console.log(info);
     },
     select: function select(info) {
         //start,end,startStr,endStr,allDay,jsEvent,view,resource
@@ -282,7 +292,7 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
         calendar.addEvent(currentEvent);
         showPopup(currentEvent);
     },
-    editable: true,
+
     events: [
         {
             title: 'All Day Event',
@@ -360,6 +370,7 @@ const AddEvent=(event)=>{
     calendarEvent.allDay=false;
 
     calendarEvent.title=event.title;
+    calendarEvent.editable=true;
         // start: '2020-09-12T10:30:00',
         // end: '2020-09-12T12:30:00'
 
@@ -431,7 +442,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     calendar.render();
 
-
+    document.querySelectorAll('a.fc-event').forEach(el=>el.removeAttribute('href'));
 
     dragElement(popUp);
 
