@@ -10,15 +10,20 @@ const TYPES=[
     // {  text:'Tous les jours de la semaine (du lundi au vendredi)',value:'everyMtoF'}
     ];
 var mouseX, mouseY, windowWidth, windowHeight;
-var popupLeft, popupTop,popUp;
+var popupLeft, popupTop,popUp,btnEventDelete,btnEventView,btnEventEdit,inputEventId;
 var popUpContainer,btnCancelEvent,btnSubmitEvent,calendarEl;
 var startHourLabel,endHourLabel,startMinLabel,endMinLabel
 var contextMenu=document.querySelector('.event__contextMenu');
+var contextMenuWrapper=document.querySelector('.contextMenu__wrapper');
 const convertDateString=(date)=>{
     let startDateParts = date.split("/");
      return `${startDateParts[2]}-${startDateParts[1]}-${startDateParts[0]}`
 }
 
+inputEventId=document.querySelector('#inputEventId');
+btnEventDelete=document.querySelector('#btnEventDelete');
+btnEventEdit=document.querySelector('#btnEventEdit');
+btnEventView=document.querySelector('#btnEventView');
 popUpContainer = document.querySelector('.eventPop__container');
 btnCancelEvent = document.querySelector('#cancelEvent');
 btnSubmitEvent = document.querySelector('#submitEvent');
@@ -55,6 +60,22 @@ let optionsTimeInput = {
     labelTo: 'To'
 };
 
+const showMenuContext=show=>{contextMenuWrapper.style.display=show?'block':'none'}
+
+btnEventDelete.addEventListener('click',()=>{
+    let eventId =inputEventId.value;
+    if(eventId){
+        removeEvent(eventId);
+    }
+    showMenuContext(false);
+})
+
+btnEventEdit.addEventListener('click',(e)=>{
+    let eventId =inputEventId.value;
+    let event = calendar.getEventById(eventId)
+    showPopup(event);
+    removeEvent(eventId);
+})
 selectInputType.addEventListener('change',(e)=>{
     switch (e.target.value) {
         case EVENTTYPE.EVERYDAY:
@@ -77,7 +98,10 @@ selectInputType.addEventListener('change',(e)=>{
 
     }
 })
-
+contextMenuWrapper.addEventListener('click',(e)=>{
+    if(e.target===contextMenuWrapper)
+        showMenuContext(false)
+})
 btnSubmitEvent.addEventListener('click',(e)=>{
 
     let event = {
@@ -97,7 +121,6 @@ btnSubmitEvent.addEventListener('click',(e)=>{
         hideModal(true);
     }
 
-    //
 
 
 })
@@ -178,10 +201,15 @@ const initializeTimeInput=(startTime,endTime)=>{
 
 const showPopup = (event) => {
 
+    console.log(event.allDay);
+    document.querySelector('#event__title').value=event.title;
+
+
     bulmaDateEnd.style.display='none';
     let eventStartTime;
     let eventEndTime;
     if(event.allDay){
+
         eventStartTime=(new Date(event.start)).toTimeString().toString().split(' ',1).toString();
         eventEndTime=(new Date(event.start));
         eventEndTime.setMinutes(eventEndTime.getMinutes() + 30);
@@ -197,7 +225,7 @@ const showPopup = (event) => {
     let eventEndDate=(new Date(event.end)).toLocaleDateString('fr').toString();
 
     setSelectTypeValues(Days[(new Date(event.start)).getDay()]);
-
+    // console.log(event.end);
     initializeDateInput(eventStartDate,eventEndDate);
     initializeTimeInput(eventStartTime,eventEndTime);
 
@@ -251,6 +279,9 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
     },
     eventClick: function (info) {
         contextMenu.style.display='block';
+        showMenuContext(true)
+        inputEventId.value=info.event._def.publicId;
+        btnEventView.href=info.event._def.url;
         contextMenu.style.top=`${info.jsEvent.clientY}px`;
         contextMenu.style.left=`${info.jsEvent.clientX}px`;
         console.log(info);
@@ -261,7 +292,7 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
 
         let currentEvent = {
             id: DEFAULT_EVENT_ID,
-            title: '(title)',
+            title: '(titre)',
             start:new Date(info.startStr),
             end: new Date(info.endStr),
             allDay:info.allDay
@@ -336,9 +367,11 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
             start: '2020-09-13T07:00:00'
         },
         {
+            id:'test',
             title: 'Click for Google',
             url: 'http://google.com/',
-            start: '2020-09-28'
+            start: '2020-09-28',
+            end: '2020-09-29'
         }
     ]
 });

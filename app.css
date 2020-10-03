@@ -2,7 +2,9 @@
     font-family: 'Roboto', sans-serif;
 
 }
-
+body{
+    position: relative;
+}
 
 .eventPop__container {
     width: 100vw;
@@ -72,14 +74,26 @@ height:100%;
     height: 150px;
     display: none;
 }
-.event__contextMenu .contextMenu__eventAction{
-    margin-top: 5px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+
+.menu__link{
+    display: block;
+    background: none;
+    border: 0px;
+    outline: 0px;
+    color: #35a7de;
+    font-size: 20px;
+    pointer-events: all;
+    cursor: pointer;
 }
-.event__contextMenu button{
-    border: none;
-    color:#fff;
-    border-radius: 5px;
+
+.contextMenu__wrapper{
+    width: 100vw;
+    height: 100vh;
+    background: transparent;
+    position: absolute;
+    z-index: 9;
+    left: 0;
+    top: 0;
+    display: none;
+
 }
