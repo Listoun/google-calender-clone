@@ -264,6 +264,7 @@ const showPopup = (event) => {
 
 var calendar = new FullCalendar.Calendar(calendarEl, {
 
+    // themeSystem:'bootstrap',
     locale:'fr',
     initialView: 'dayGridMonth',
     editable: true,

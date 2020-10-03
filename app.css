@@ -97,3 +97,70 @@ height:100%;
     display: none;
 
 }
+.fc-dayGridMonth-view .fc-theme-standard td, .fc-theme-standard th{
+    border: none !important;
+}
+th.fc-col-header-cell,td.fc-daygrid-day{
+    border-left: 1px solid #ddd !important;
+    border-right: 1px solid #ddd !important;
+}
+th.fc-col-header-cell a.fc-col-header-cell-cushion{
+    width: 100%;
+    text-align: center;
+    text-transform: uppercase;
+     color: #70757a;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 20px;
+}
+td.fc-daygrid-day{
+    border-bottom: 1px solid #ddd !important;
+}
+.fc-daygrid-day-top{
+    display: flex;
+    justify-content: center;
+}
+.fc-daygrid-day-top .fc-daygrid-day-number{
+    margin-top: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .3px;
+    display: inline-block;
+    text-align: center;
+    white-space: nowrap;
+    width: max-content;
+    min-width: 24px;
+    color: #70757a;
+    line-height: 16px;
+
+}
+.fc-day-today .fc-daygrid-day-top .fc-daygrid-day-number{
+    margin-top: 3px;
+    height: 24px;
+    line-height: 24px;
+    color: #fff;
+    background-color: #1a73e8;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.fc .fc-daygrid-day.fc-day-today{
+    background-color: #ffffff;
+}
+button.fc-button-primary{
+
+    color: #fff;
+    background-color: #1a73e8 !important;
+    border: 0px !important;
+    font-size: 15px !important;
+}
+.fc-h-event{
+    background-color: #1a73e8 !important;
+    font-size: 14px !important;
+}
+.fc{
+    font-size: 15px;
+}
+
