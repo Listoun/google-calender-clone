@@ -5,11 +5,24 @@ const EVENTTYPE={  NOTREPEATED:'notRepeated', EVERYDAY:'everyDay', EVERYWEEK:'ev
 const TYPES=[
     {  text:'Ne se répète pas',value:'notRepeated'},
     {  text:'tous les jours',value:'everyDay'},
-    // {  text:'Chaque semaine le',value:'everyWeek'},
+    {  text:'Chaque semaine le',value:'everyWeek'},
     // {  text:'Chaque mois le premier',value:'evryMonth'},
-    // {  text:'Tous les jours de la semaine (du lundi au vendredi)',value:'everyMtoF'}
+    {  text:'Tous les jours de la semaine (du lundi au vendredi)',value:'everyMtoF'}
     ];
-var mouseX, mouseY, windowWidth, windowHeight;
+// title:document.querySelector('#event__title').value,
+//     startDate: document.querySelector('.bulmaDate .datetimepicker-dummy-input').value,
+//     endDate:document.querySelector('.bulmaDateEnd .datetimepicker-dummy-input').value,
+//     type:selectInputType.value,
+//     startTime: `${startHourLabel.innerHTML}:${startMinLabel.innerHTML}`,
+//     endTime:`${endHourLabel.innerHTML}:${endMinLabel.innerHTML}`,
+//     zoomType:document.querySelector('#event__zoomType').value,
+//     file:document.querySelector('#event__file').value,
+var mouseX, mouseY, windowWidth, windowHeight,
+    inputEventTitle=document.querySelector('#event__title'),
+    inputEventDateStart=document.querySelector('.bulmaDate .datetimepicker-dummy-input'),
+    inputEventDateEnd=document.querySelector('.bulmaDateEnd .datetimepicker-dummy-input'),
+    inputEventZoomType=document.querySelector('#event__zoomType'),timePickerContainer,
+    inputEventFile=document.querySelector('#event__file');
 var popupLeft, popupTop,popUp,btnEventDelete,btnEventView,btnEventEdit,inputEventId;
 var popUpContainer,btnCancelEvent,btnSubmitEvent,calendarEl;
 var startHourLabel,endHourLabel,startMinLabel,endMinLabel
@@ -105,18 +118,19 @@ contextMenuWrapper.addEventListener('click',(e)=>{
 btnSubmitEvent.addEventListener('click',(e)=>{
 
     let event = {
-        title:document.querySelector('#event__title').value,
-        startDate: document.querySelector('.bulmaDate .datetimepicker-dummy-input').value,
-        endDate:document.querySelector('.bulmaDateEnd .datetimepicker-dummy-input').value,
+        title:inputEventTitle.value,
+        startDate: inputEventDateStart.value,
+        endDate:inputEventDateEnd.value,
         type:selectInputType.value,
         startTime: `${startHourLabel.innerHTML}:${startMinLabel.innerHTML}`,
         endTime:`${endHourLabel.innerHTML}:${endMinLabel.innerHTML}`,
-        zoomType:document.querySelector('#event__zoomType').value,
-        file:document.querySelector('#event__file').value
+        zoomType:inputEventZoomType.value,
+        file:inputEventFile.value,
+
     }
     if(validateEvent(event)){
         removeEvent(DEFAULT_EVENT_ID);
-        console.log(event);
+        // console.log(event);
         AddEvent(event);
         hideModal(true);
     }
@@ -163,8 +177,8 @@ const initializeDateInput=(startDate,endDate)=>{
         inputDateEnd.bulmaCalendar.startDate=endDate
     }
 
-    document.querySelector('.bulmaDateEnd .datetimepicker-dummy-input').value=endDate;
-    document.querySelector('.bulmaDate .datetimepicker-dummy-input').value=startDate;
+    inputEventDateEnd.value=endDate;
+    inputEventDateStart.value=startDate;
 }
 const initializeTimeInput=(startTime,endTime)=>{
 
@@ -202,7 +216,7 @@ const initializeTimeInput=(startTime,endTime)=>{
 const showPopup = (event) => {
 
     console.log(event.allDay);
-    document.querySelector('#event__title').value=event.title;
+    inputEventTitle.value=event.title;
 
 
     bulmaDateEnd.style.display='none';
@@ -377,25 +391,41 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
     ]
 });
 const validateEvent=(event)=>{
+    let valide=true;
+    if((new Date(`2011-10-10T${event.startTime}:00`))>=(new Date(`2011-10-10T${event.endTime}:00`))){
+        valide=false;
+        timePickerContainer.style.border='1px solid red';
+    }
 
-        let valide=true;
         if(event.title===''){
             valide=false;
-        }
-        if(event.type!==EVENTTYPE.NOTREPEATED && (new Date(convertDateString(event.startDate)))>=(new Date(convertDateString(event.endDate))))
-            valide =false;
+            inputEventTitle.classList.contains('is-danger')?null:inputEventTitle.classList.add('is-danger');
 
+        }
+        if(event.type!==EVENTTYPE.NOTREPEATED && (new Date(convertDateString(event.startDate)))>=(new Date(convertDateString(event.endDate)))) {
+            valide = false;
+            document.querySelector('.datetimepicker-dummy .datetimepicker-dummy-wrapper').style.border='1px solid red';
+        }
+        if(inputEventZoomType.value===''){
+            inputEventZoomType.style.border='1px solid red';
+        }
         return valide;
 }
 const resetModal=()=>{
-    document.querySelector('#event__title').value='';
-         document.querySelector('.bulmaDate .datetimepicker-dummy-input').value='';
-        document.querySelector('.bulmaDateEnd .datetimepicker-dummy-input').value='';
+    //
+    timePickerContainer.style.border='none';
+    inputEventTitle.classList.contains('is-danger')?inputEventTitle.classList.remove('is-danger'):null;
+    document.querySelector('.datetimepicker-dummy .datetimepicker-dummy-wrapper').style.border='none';
+    inputEventZoomType.style.border='1px solid #dbdbdb';
+    //
+    inputEventTitle.value='';
+    inputEventDateStart.value='';
+    inputEventDateEnd.value='';
         selectInputType.value='';
         document.querySelector('.bulmaTime .datetimepicker-dummy-input.is-datetimepicker-range').value='';
         document.querySelectorAll('.bulmaTime .datetimepicker-dummy-input')[1].value='';
-        document.querySelector('#event__zoomType').value='';
-        document.querySelector('#event__file').value='';
+    inputEventZoomType.value='';
+    inputEventFile.value='';
 }
 
 const AddEvent=(event)=>{
@@ -409,6 +439,13 @@ const AddEvent=(event)=>{
         // end: '2020-09-12T12:30:00'
 
     if(event.type!==EVENTTYPE.NOTREPEATED){
+        // if it recurring in a day of every week
+        if(event.type===EVENTTYPE.EVERYWEEK){
+            calendarEvent.daysOfWeek=[`${(new Date(event.startDate)).getDay()}`]
+        }
+        if(event.type===EVENTTYPE.EVERYWEEKDAYS){
+            calendarEvent.daysOfWeek=['1','2','3','4','5']
+        }
         calendarEvent.groupId='groupId';
         calendarEvent.startRecur=convertDateString(event.startDate);
         calendarEvent.endRecur=convertDateString(event.endDate);
@@ -420,6 +457,7 @@ const AddEvent=(event)=>{
         calendarEvent.end=`${convertDateString(event.endDate)}T${event.endTime}`;
     }
 
+    console.log(calendarEvent);
     calendarEvent.id='This';
     calendar.addEvent(calendarEvent);
 
@@ -442,7 +480,9 @@ const hideModal=hide=>{
 
 document.addEventListener('DOMContentLoaded', function () {
 
-
+    inputEventDateStart=document.querySelector('.bulmaDate .datetimepicker-dummy-input'),
+        inputEventDateEnd=document.querySelector('.bulmaDateEnd .datetimepicker-dummy-input')
+    timePickerContainer=document.querySelector('.datetimepicker-container');
 
 
      btnCancelEvent.addEventListener('click',()=>{
